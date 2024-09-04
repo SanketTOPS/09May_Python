@@ -3,14 +3,27 @@ from .forms import *
 from django.core.mail import send_mail
 import random
 from FinalProject import settings
+from django.contrib.auth import logout
 
 # Create your views here.
 
 def index(request):
-    return render(request,'index.html')
+    user=request.session.get('user')
+    return render(request,'index.html',{'user':user})
 
 def notes(request):
-    return render(request,'notes.html')
+    msg=""
+    user=request.session.get('user')
+    if request.method=='POST':
+        newnotes=notesForm(request.POST,request.FILES)
+        if newnotes.is_valid():
+            newnotes.save()
+            print("Your notes has been submitted!")
+            msg="Your notes has been submitted!"
+        else:
+            print(newnotes.errors)
+            msg="Error!Something went wrong...Try again"
+    return render(request,'notes.html',{'user':user,'msg':msg})
 
 def profile(request):
     return render(request,'profile.html')
@@ -22,7 +35,21 @@ def contact(request):
     return render(request,'contact.html')
 
 def login(request):
-    return render(request,'login.html')
+    msg=""
+    if request.method=='POST':
+        unm=request.POST['username']
+        pas=request.POST['password']
+
+        user=usersignup.objects.filter(username=unm,password=pas)
+        if user:
+            print("Login Successfull!")
+            msg="Login Successfull!"
+            request.session['user']=unm
+            return redirect('/')
+        else:
+            print("Error!Login faild...Try again")
+            msg="Error!Login faild...Try again"
+    return render(request,'login.html',{'msg':msg})
 
 def otpverify(request):
     msg=""
@@ -65,3 +92,7 @@ def signup(request):
         else:
             print(newuser.errors)
     return render(request,'signup.html',{'msg':msg})
+
+def userlogout(request):
+    logout(request)
+    return redirect('/login')

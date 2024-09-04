@@ -19,9 +19,10 @@
         <div class="container-fluid">
             <!-- <a class="navbar-brand" href="#">NotesApp</a> -->
             <a class="navbar-brand" href="#">
-                <img src="/static/imgs/app_logo.png" alt="Logo" width="40" height="30" class="d-inline-block align-text-top">
+                <img src="/static/imgs/app_logo.png" alt="Logo" width="40" height="30"
+                    class="d-inline-block align-text-top">
                 NotesApp
-              </a>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -44,18 +45,77 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/contact">Contact</a>
                     </li>
-                  
+
                 </ul>
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    <button class="btn btn-outline-success mx-2" type="submit">Search</button>
                 </form>
-                <a href="/login" class="btn btn-warning mx-2">Login</a>
-                <a href="/signup" class="btn btn-info">Signup</a>
+                {% if user is none %}
+                <a href="/login" class="btn btn-warning">Login</a>
+                <a href="/signup" class="btn btn-info mx-2">Signup</a>
+                {% else %}
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        {{user}}
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/profile">Update Profile</a></li>
+                        <li><a class="dropdown-item" href="/userlogout">Logout</a></li>
+                    </ul>
+                </div>
+                {% endif %}
             </div>
         </div>
     </nav>
     <!-- Navbar End -->
+
+    {% if user is none %}
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error!</h4>
+        <p>If you want to submit a Notes, Please <a href="/login">login</a> first</p>
+        <hr>
+        
+    </div>
+    {% else %}
+    <!-- Notes Form Start -->
+    <div class="container my-5">
+        <br>
+        <br>
+        <h2 style="text-align: center;color: brown;">{{msg}}</h2>
+        <hr>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <input type="text" value="{{user}}" name="user" class="form-control" id="exampleFormControlInput1" hidden>
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Query Title</label>
+                <input type="text" name="title" class="form-control" id="exampleFormControlInput1">
+            </div>
+            <select class="form-select" name="option" aria-label="Default select example">
+                <option selected>Select your option!</option>
+                <option>Core Python</option>
+                <option>Python Framework</option>
+                <option>PHP</option>
+                <option>JAVA</option>
+                <option>Android / iOS</option>
+                <option>Other</option>
+            </select>
+            <div class="mb-3 my-3">
+                <label for="formFile" class="form-label">Upload your file's</label>
+                <input class="form-control" name="myfile" type="file" id="formFile">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Query Description</label>
+                <textarea class="form-control" name="desc" id="exampleFormControlTextarea1" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-dark btn-lg">Submit Notes</button>
+        </form>
+    </div>
+    <!-- Notes Form End -->
+    {% endif %}
 </body>
 
 </html>
