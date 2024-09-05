@@ -26,13 +26,37 @@ def notes(request):
     return render(request,'notes.html',{'user':user,'msg':msg})
 
 def profile(request):
-    return render(request,'profile.html')
+    msg=""
+    user=request.session.get('user')
+    userid=request.session.get('userid')
+    cid=usersignup.objects.get(id=userid)
+    if request.method=='POST':
+        updateData=updateForm(request.POST)
+        if updateData.is_valid():
+            updateData=updateForm(request.POST,instance=cid)
+            updateData.save()
+            print("Your Profile has been updated!")
+            msg="Your Profile has been updated!"
+            return redirect('/')
+        else:
+            msg="Error!Profile updation faild...Try again!"
+            print(updateData.errors)
+    return render(request,'profile.html',{'user':user,'msg':msg,'cid':cid})
 
 def about(request):
-    return render(request,'about.html')
+    user=request.session.get('user')
+    return render(request,'about.html',{'user':user})
 
 def contact(request):
-    return render(request,'contact.html')
+    user=request.session.get('user')
+    if request.method=='POST':
+        newcontact=contactForm(request.POST)
+        if newcontact.is_valid():
+            newcontact.save()
+            print("Your feed has been submitted!")
+        else:
+            print(newcontact.errors)
+    return render(request,'contact.html',{'user':user})
 
 def login(request):
     msg=""
@@ -41,10 +65,13 @@ def login(request):
         pas=request.POST['password']
 
         user=usersignup.objects.filter(username=unm,password=pas)
+        userid=usersignup.objects.get(username=unm)
+        print("Userid:",userid.id)
         if user:
             print("Login Successfull!")
             msg="Login Successfull!"
             request.session['user']=unm
+            request.session['userid']=userid.id
             return redirect('/')
         else:
             print("Error!Login faild...Try again")
