@@ -2,8 +2,10 @@ from django.shortcuts import render,redirect
 from .forms import *
 from django.core.mail import send_mail
 import random
+import requests
 from FinalProject import settings
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -11,6 +13,7 @@ def index(request):
     user=request.session.get('user')
     return render(request,'index.html',{'user':user})
 
+@login_required(login_url='/login')
 def notes(request):
     msg=""
     user=request.session.get('user')
@@ -115,6 +118,17 @@ def signup(request):
                     from_ID=settings.EMAIL_HOST_USER
                     to_ID=[request.POST['username']]
                     send_mail(subject=sub,message=msg,from_email=from_ID,recipient_list=to_ID)
+
+                    #Send SMS
+
+                    """url = "https://www.fast2sms.com/dev/bulkV2"
+                    querystring = {"authorization":"KEodGeCxJPkWAFHQUYtS86Rbmrv1MyuViag4hs7N2DujvzKSw5MN9mRryb3LC4DsIHiWph78","variables_values":f"{otp}","route":"otp","numbers":"7623904602,9313623232,9313819231"}
+                    headers = {
+                        'cache-control': "no-cache"
+                    }
+                    response = requests.request("GET", url, headers=headers, params=querystring)
+                    print(response.text)"""
+
                     return redirect('otpverify')
         else:
             print(newuser.errors)
