@@ -12,8 +12,7 @@ def index(request):
             fnm=newuser.cleaned_data['firstname']
             lnm=newuser.cleaned_data['lastname']
             unm=newuser.cleaned_data['email']
-            pas=make_password(newuser.cleaned_data['password'])
-            make_password()
+            pas=make_password(newuser.cleaned_data['password'],hasher='sha1')
             ct=newuser.cleaned_data['city']
             st=newuser.cleaned_data['state']
             mob=newuser.cleaned_data['mobile']
