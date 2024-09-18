@@ -8,6 +8,7 @@ def index(request):
         if newreq.is_valid(): #TRUE
             newreq.save()
             print("Record inserted!")
+            return redirect('/')
         else:
             print(newreq.errors)
     return render(request,'index.html')

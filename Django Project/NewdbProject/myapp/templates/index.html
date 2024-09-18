@@ -19,15 +19,17 @@
     <hr>
 
     <div class="container">
-        <form method="post">
+        <form id="myfrm" method="post">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Name</label>
-                <input type="text" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <input type="text" name="name" class="form-control" id="exampleInputEmail1"
+                    aria-describedby="emailHelp">
             </div>
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <input type="email" name="email" class="form-control" id="exampleInputEmail1"
+                    aria-describedby="emailHelp">
             </div>
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Date of Birth</label>
@@ -35,7 +37,8 @@
             </div>
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Mobile</label>
-                <input type="number" name="mobile" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <input type="number" name="mobile" class="form-control" id="exampleInputEmail1"
+                    aria-describedby="emailHelp">
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Address</label>
@@ -46,6 +49,25 @@
         <hr>
         <a href="/showdata">ShowData</a>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        var frm = $('myfrm');
+        frm.submit(function () {
+            $.ajax({
+                type: frm.attr('method'),
+                data: frm.serialize(),
+                success: function (data) {
+                    //$("#SOME-DIV").html(data);
+                    console.log("Success");
+                },
+                error: function(data) {
+                    //$("#MESSAGE-DIV").html("Something went wrong!");
+                    console.log("Error");
+                }
+            });
+            return false;
+        });
+    </script>
 </body>
 
 </html>

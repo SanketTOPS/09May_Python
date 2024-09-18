@@ -7,6 +7,7 @@ from FinalProject import settings
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
+
 # Create your views here.
 
 def index(request):
