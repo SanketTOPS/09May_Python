@@ -3,6 +3,7 @@ from django.contrib.auth.hashers import make_password,check_password
 from .forms import *
 from .models import *
 
+
 # Create your views here.
 
 def index(request):
@@ -12,7 +13,7 @@ def index(request):
             fnm=newuser.cleaned_data['firstname']
             lnm=newuser.cleaned_data['lastname']
             unm=newuser.cleaned_data['email']
-            pas=make_password(newuser.cleaned_data['password'],hasher='sha1')
+            pas=make_password(newuser.cleaned_data['password'])
             ct=newuser.cleaned_data['city']
             st=newuser.cleaned_data['state']
             mob=newuser.cleaned_data['mobile']
@@ -26,10 +27,11 @@ def index(request):
 def userlogin(request):
     if request.method=='POST':
         unm=request.POST.get('email')
+        user = usersignup.objects.get(email=unm)
         pas=request.POST.get('password')
-
-        check=check_password(password=pas)
-        if usersignup.objects.filter(username=unm).exists() and check is True:
+        encoded_password =  user.password
+        check=check_password(password=pas,encoded=encoded_password)
+        if usersignup.objects.filter(email=unm).exists() and check is True:
             print("Login Successfull!")
         else:
             print("Error")

@@ -42,9 +42,6 @@ INSTALLED_APPS = [
     'myapp',
 ]
 
-PASSWORD_HASHERS = (
-    'django.contrib.auth.hashers.SHA1PasswordHasher',
-)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
