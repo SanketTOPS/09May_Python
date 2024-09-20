@@ -12,9 +12,10 @@ from django.contrib.auth.decorators import login_required
 
 def index(request):
     user=request.session.get('user')
+    print("username...", request.user.username)
     return render(request,'index.html',{'user':user})
 
-@login_required(login_url='/login')
+
 def notes(request):
     msg=""
     user=request.session.get('user')
